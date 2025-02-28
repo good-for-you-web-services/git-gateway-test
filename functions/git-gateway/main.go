@@ -14,6 +14,7 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 	c := make(chan error, 1)
 
 	go func() {
+		log.Print("Running Git Gateway...")
 		c <- cmd.RootCommand().Execute()
 	}()
 
@@ -25,6 +26,7 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 				Body:              "Something didn't work",
 			}, nil
 		case <-time.After(2 * time.Second):
+			log.Print("Closing Git Gateway after 2 seconds with no errors...")
 			return &events.APIGatewayProxyResponse{
 				StatusCode:        200,
 				Body:              "Ran Git Gateway for 2s, then quit.",
